@@ -1,0 +1,217 @@
+<html>
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.3.0/font/bootstrap-icons.css">
+        <script src="https://requirejs.org/docs/release/2.3.5/minified/require.js"></script>
+        <script src="http://code.jquery.com/jquery-2.1.1.min.js"></script>
+        <style>
+            .card:hover{
+                transform: scale(1);
+	            animation: pulse 2s;
+            }
+            .card-img-top{
+                height: 350;
+            }
+            .card-footer
+            {
+                background :transparent;
+                border-top: 0px;
+            }
+            .bg-primary{
+                background-color: rgba(230, 99, 33, 0.828) !important; 
+            }
+            .mini{
+                width : 50px;
+                height: 50px;
+            }
+            @keyframes pulse {
+	        0% {
+		        transform: scale(0.95);
+		        box-shadow: 0 0 0 0 rgba(0, 0, 0, 0.7);
+	        }
+	        70% {
+		        transform: scale(1);
+		        box-shadow: 0 0 0 10px rgba(0, 0, 0, 0);
+            }
+	        100% {
+		        transform: scale(0.95);
+		        box-shadow: 0 0 0 0 rgba(0, 0, 0, 0);
+	    }
+    }
+        </style>
+    </head>
+    <body>
+        <header>
+            <nav class="navbar navbar-expand-lg navbar-dark fixed-top bg-primary">
+                <div class="container" style="font-size: 1.3rem;">
+                    <a class="navbar-brand" href="homepage.html">
+                        <img src="https://cdn2.vectorstock.com/i/1000x1000/48/41/online-shopping-logo-design-with-a-tablet-under-vector-13314841.jpg"
+                         width="45" height="45" class="d-inline-block align-top" alt="image not visible"> 
+                         Online Shopping
+                    </a>
+                    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse"
+                    aria-controls="narbarCollapse" aria-expanded="false" aria-label="toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                    </button>
+                <div class="collapse navbar-collapse" id="navbarCollapse">
+                    <ul class="nav navbar-nav mx-auto">
+                        <li class="nav-item active">
+                            <a class="nav-link" href="homepage.html">home</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="Menpage.html">Mens</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="Womenpage.html">Womens</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="kidpage.html">Kids</a>
+                        </li>
+                        <hr>
+                    </ul>
+                    <ul class="nav navbar-nav mr-auto">
+                        <li class="nav-item">
+                            <a class="btn" href="shoppingbasket.html" data-bs-toggle="offcanvas" data-bs-target="#shoppingCart" aria-controls="shoppingCart">
+                            <i class="bi bi-cart4" role="img" aria-label="cart" style="font-size: 1.5rem; color: whitesmoke;"></i></a>
+                        </li>
+                        <li class="nav-item">
+                            <a  class="nav-item" href=""><i class="bi bi-person-fill" role="img" aria-label="profile" style="font-size: 1.5rem; color: whitesmoke;"></i></a>
+                        </li>
+                    </ul>    
+                </div>
+                </div>
+            </nav>
+        </header>
+        <div class="container mt-4 pt-5">
+            <div class="row row-cols-1 row-cols-lg-2 row-cols-xxl-3 g-4 con1"></div>
+            <!-- description page and offcanvas -->
+            <div class="row row-cols-1 row-cols-md-2 con2 my-5 mx-5">
+                <div class="offcanvas offcanvas-start" data-bs-scroll="true" tabindex="-1" id="shoppingCart" aria-labelledby="shoppingCartLabel">
+                    <div class="offcanvas-header">
+                        <h5 class="offcanvas-title" id="shoppingCartLabel">Your shopping cart</h5>
+                        <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+                    </div>
+                    <div class="offcanvas-body">
+                        <div class="table-responsive">
+                            <table class="table table-hover" id="mytable">
+                                <thread>
+                                    <tr>
+                                        <th>name</th>
+                                        <th>quantity</th>
+                                        <th class="text-center">price</th>
+                                        <th class="text-center">total</th>
+                                        <th></th>
+                                    </tr>
+                                </thread>
+                                <tbody class="insert" id="insert"></tbody>
+                            </table>
+                        </div>
+                        <h6 id="amt"></h6>
+                        <a type="button" class="m-1 btn btn-danger" onclick="clear1()">clear the cart</a>
+                    </div>
+                </div>
+            </div>
+        </div>   
+        <script src="scriptjs.js"></script>
+        <!-- loading of data -->
+        <script>
+           $('document').ready(function()
+{
+    $.ajax({
+        type: "GET",
+        url: "data1.json",
+        success: function(data){
+            var m = data.products.men;
+            for( var i =0; i<m.length; i++)
+            {
+                var obj = `
+                <div class="col-lg-4">
+                    <div class="card rounded mb-4 shadow-sm">
+                        <img class="card-img-top" src="${m[i].imagelink}"/>
+                        <div class="card-body">
+                            <h5 class="card-title">${m[i].productName}</h5>
+                        </div>
+                        <div class="card-footer">
+                            <button type="button" class="btn btn-primary" onclick="myfunc('${m[i].productId}')">view details</button>
+                            <button type="button" href="shoppingbasket.html" class="btn btn-primary float-right pt-2"
+                            data-bs-toggle="offcanvas" data-bs-target="#shoppingCart" aria-controls="shoppingCart" onclick="myfunc1('${m[i].productId}')">add to cart</button>
+                        </div>
+                    </div>
+                </div> `;
+                $('.con1').append(obj);
+            }
+        },
+    });
+        var cart = JSON.parse(localStorage.getItem('product'));
+        if(cart)
+        {
+            var obj2 = `<span>`;
+            for( var i = 0; i < cart.length; i++)
+                {
+                    obj2 += `
+                    <tr>
+                        <td class="col-sm-8 col-md-6">
+                            <div class="media">
+                                <img class="mr-3 thumbnail img-fluid" width="75"
+                                src="${cart[i]?.imagelink}" alt="${cart[i]?.productName}"></img>
+                                <div class="media-body">
+                                    <h5 class="mt-0 media-heading text-primary">${cart[i]?.productName}</h5>
+                                </div>
+                            </div>
+                        </td>
+                        <td class="col-sm-1 col-md-1" style="text-align: center">
+                            <input type="number" class="form-control" id="${cart[i]?.productId}" value="${cart[i]?.quantity}" min="1" onchange="change1('${cart[i]?.productId}','${cart[i]?.price}')"></input>
+                        </td>
+                        <td class="col-sm-1 col-md-1 text-center">
+                            <strong>${cart[i]?.price}</strong>
+                        </td>
+                        <td  class="col-sm-1 col-md-1 text-center">
+                        <strong id="total${cart[i]?.productId}">${cart[i]?.total}</strong></td>
+                        <td class="col-sm-1 col-md-1">
+                        <a type="button" class="btn btn-danger" onclick="clear2('${cart[i]?.productId}')">
+                            X
+                        </a>
+                    </td>
+                    </tr>
+                    `;
+                }
+                obj2 += `</span>`;
+                document.getElementById('insert').innerHTML = obj2;
+                cal();
+            }
+});
+        </script>
+        <footer>
+            <div class="container-fluid bg-primary">
+                <div class="row g-3">
+                    <div class="col"><h5>Get connected with us on social netwoks!</h5></div>
+                    <div class="col" style="font-size: 1.2rem;">
+                            <i class="bi bi-facebook p-4"></i>
+                            <i class="bi bi-instagram p-4"></i>
+                            <i class="bi bi-twitter p-4"></i>
+                            <i class="bi bi-linkedin p-4"></i>
+                        </div>
+                    <hr>
+                </div>
+                <div class="row g-3">
+                    <div class="col-md-4"><u><h6>About us</h6></u>
+                        <div class="row pt-3"><p>This is a project regarding Web application development internship</p></div>
+                    </div>
+                    <div class="col-md-4 col-sm-6"><h6><u>Usefull links</u></h6>
+                        <div class="row pt-3"><a>help</a></div>
+                        <div class="row pt-3"><a>customer service</a></div>
+                        <div class="row pt-3 pb-3"><a>return/exchange policy</a></div>
+                    </div>
+                    <div class="col-md-4 col-sm-6"><h6><u>Contact</u></h6>
+                        <div class="row pt-3"><a><i class="bi bi-house-door-fill p-3"></i>xyz, block-12/4-3, hyd</a></div>
+                        <div class="row pt-3"><a><i class="bi bi-envelope-fill p-3"></i>abc@sample.com</a></div>
+                        <div class="row pt-3 pb-3"><a><i class="bi bi-telephone-fill p-3"></i>+91 1234567890</a></div>
+                    </div>
+                </div>
+            </div>
+        </footer>
+    </body>
+</html>
