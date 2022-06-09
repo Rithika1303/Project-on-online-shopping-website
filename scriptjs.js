@@ -6,35 +6,30 @@ function myfunc(ans){
         url: "data1.json",
         success: function(data){
             var path1;
-            if(ans[0]=== 'm')
-            {
+            if(ans.includes('m'))
                 path1= data.products.men;
-            }
-            else if(ans[0] === 'w')
-            {
+            else if(ans.includes('w'))
                 path1= data.products.women;
-            }
-            else{
+            else
                 path1= data.products.kids;
-            }
-            for( var i =0; i<path1.length; i++)
+            path1.forEach(item =>
             {
-                var x= path1[i].productId;
+                var x= item.productId;
                 if(x === ans)
                 {
                     var obj1= `
                     <div class="col-lg-5 mt-4">
-                        <img src="${path1[i].imagelink}" class="img-fluid img-thumbnail rounded">
+                        <img src="${item.imagelink}" class="img-fluid img-thumbnail rounded">
                     </div>
                     <div class="col-lg-7 g-4 pt-2">
-                        <h2>${path1[i].productName}</h2>
+                        <h2>${item.productName}</h2>
                         <div class="row mt-3">
-                        <p>Price: ${path1[i].price}</p>
+                        <p>Price: ${item.price}</p>
                         <div class="row color1"><p>Color:</p></div>
                         <div>description:
-                            <p>Material: ${path1[i].description.material}</p>
-                            <p>Sleeves: ${path1[i].description.sleeves}</p>
-                            <p>Size: ${path1[i].description.size}</p>
+                            <p>Material: ${item.description.material}</p>
+                            <p>Sleeves: ${item.description.sleeves}</p>
+                            <p>Size: ${item.description.size}</p>
                         </div>
                         <div class="row">
                         <div class=" col-lg-4">
@@ -45,15 +40,15 @@ function myfunc(ans){
                         </div>
                     </div>`;
                     var objcol ='';
-                    for(var j = 0 ; j<path1[i].availableColor.length; j++)
-                    {
+                    // for(var j = 0 ; j<path1[i].availableColor.length; j++)
+                        item.availableColor.forEach(items => {
                         objcol += `
-                        <div class="col col-2 m-2 card mini" style="background-color: ${data.products.men[i].availableColor[j]};"></div>`;
-                    }
+                        <div class="col col-2 m-2 card mini" style="background-color: ${items};"></div>`;
+                    });
                     $('.con2').append(obj1);
                     $('.color1').append(objcol);
                 }
-            }
+            });
         }
     })
 }
@@ -63,20 +58,12 @@ function myfunc1(ans){
         url: "data1.json",
         success: function(data){
             var path1;
-            if(ans[0]=== 'm')
-            {
-                console.log('m');
+            if(ans.includes('m'))
                 path1= data.products.men;
-            }
-            else if(ans[0] === 'w')
-            {
-                console.log('w');
+            else if(ans.includes('w'))
                 path1= data.products.women;
-            }
-            else{
-                console.log('else');
+            else
                 path1= data.products.kids;
-            }
             for( var i =0; i<path1.length; i++)
             {
                 var x= path1[i].productId;
@@ -107,7 +94,7 @@ function myfunc1(ans){
                                         <img class="mr-3 thumbnail img-fluid" width="75"
                                         src="${path1[i].imagelink}" alt="${path1[i].productName}"></img>
                                         <div class="media-body">
-                                            <h5 class="mt-0 media-heading text-primary">${path1[i].productName}</h5>
+                                            <h6 class="mt-0 media-heading">${path1[i].productName}</h6>
                                         </div>
                                     </div>
                                 </td>
@@ -135,29 +122,28 @@ function myfunc1(ans){
         }
     })
 }
+// calucating total amount 
 function cal(){
     var cart =JSON.parse(localStorage.getItem('product'));
     var amt1=0;
     if(cart){
-        for( var j = 0; j < cart.length; j++)
-        {
-            amt1+= cart[j].total;
-        }
+        cart.forEach(item => {amt1+= item.total;});
+        document.getElementById('amt').innerHTML="Total Amount: "+amt1;
     }
-    console.log("hi");
-    document.getElementById('amt').innerHTML="Total Amount: "+amt1;
 }
+// clear whole cart
 function clear1(){
     productArr=[];
-    localStorage.removeItem('product');
     localStorage.clear();
+    cal();
     $('.insert').html('');
 }
+// deleting of a single product
 function clear2(prodid){
     console.log(prodid);
     var cart =JSON.parse(localStorage.getItem('product'));
     if(cart){
-        for( var j = 0; j < cart.length; j++)
+        for(var j=0;j<cart.length;j++)
         {
             if(cart[j].productId === prodid)
             {
@@ -166,31 +152,28 @@ function clear2(prodid){
                 let temp= cart.filter(item => item.productId != prodid);
                 localStorage.removeItem('product');
                 localStorage.setItem('product',JSON.stringify(temp));
+                cal();
             } 
         }
     }
     
 }
+// amount of a product changing according to its quantity
 function change1(prodid, price1) {
     var cart =JSON.parse(localStorage.getItem('product'));
     if(cart){
-        for( var j = 0; j < cart.length; j++)
+        cart.forEach(item =>
         {
-            if(cart[j].productId === prodid)
+            if(item.productId === prodid)
             {
                 var final= "total"+prodid;
                 var x= document.getElementById(prodid).value;
-                cart[j].quantity= x;
-                cart[j].total = price1*x;
+                item.quantity= x;
+                item.total = price1*x;
                 document.getElementById(final).innerHTML=price1*x;
                 localStorage.setItem('product',JSON.stringify(cart));
                 cal();
             } 
-        }
+        });
 }
 }
-// $('.btn').click(function(){
-//     // $('.con1').html('');
-//     $('.card-title').text("loading....");
-// })
-// <button type="button" class="col-3 btn btn-primary float-left" href="shoppingbasket.html" data-bs-toggle="offcanvas" data-bs-target="#shoppingCart" aria-controls="shoppingCart>Add to cart</button>
