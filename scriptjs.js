@@ -34,7 +34,7 @@ function myfunc(ans){
                         <div class="row">
                         <div class=" col-lg-4">
                             <a type="button" href="shoppingbasket.html" class="btn btn-primary float-right"
-                            data-bs-toggle="offcanvas" data-bs-target="#shoppingCart" aria-controls="shoppingCart" onclick="myfunc1('${path1[i].productId}')">add to cart</a>
+                            data-bs-toggle="offcanvas" data-bs-target="#shoppingCart" aria-controls="shoppingCart" onclick="myfunc1('${item.productId}')">add to cart</a>
                             </div>
                         </div>
                         </div>
