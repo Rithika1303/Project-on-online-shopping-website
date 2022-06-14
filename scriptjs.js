@@ -128,8 +128,8 @@ function cal(){
     var amt1=0;
     if(cart){
         cart.forEach(item => {amt1+= item.total;});
-        document.getElementById('amt').innerHTML="Total Amount: "+amt1;
     }
+    document.getElementById('amt').innerHTML="Total Amount: "+amt1;
 }
 // clear whole cart
 function clear1(){
